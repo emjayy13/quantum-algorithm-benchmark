@@ -1,5 +1,10 @@
 from benchmark.algorithms import DeutschAlgorithm
+from benchmark.benchmark import BenchmarkRunner
 
-algorithm= DeutschAlgorithm()
-circuit= algorithm.build_circuit()
-print(circuit)
+algorithm = DeutschAlgorithm()
+
+runner = BenchmarkRunner()
+
+results = runner.run(algorithm)
+
+print(results)
