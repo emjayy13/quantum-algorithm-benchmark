@@ -1,0 +1,34 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Conda
+.env
+.conda/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# Distribution
+build/
+dist/
+*.egg-info/
+
+# Testing
+.pytest_cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Results (optional)
+results/*.csv
+results/*.png
