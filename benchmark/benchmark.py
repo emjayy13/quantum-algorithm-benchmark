@@ -2,6 +2,7 @@ import time
 from typing import Any
 from qiskit_aer import AerSimulator
 from benchmark.algorithms import QuantumAlgorithm
+from benchmark.metrics import MetricsCollector
 
 DEFAULT_SHOTS= 1024
 
@@ -23,13 +24,15 @@ class BenchmarkRunner:
         runtime=time.perf_counter() - start_time
         counts= result.get_counts()
 
-        return{
-            "algorithm" : algorithm.name,
-            "qubits" : algorithm.num_qubits,
-            "depth" : circuit.depth(),
-            "gate_count" : circuit.size(),
-            "runtime_seconds": runtime,
+        metrics = MetricsCollector.collect(
+                    circuit=circuit,
+                    runtime=runtime,
+                    counts=counts,
+        )
+
+        return {
+            "algorithm": algorithm.name,
+            **metrics,
             "shots": self.shots,
-            "counts": counts,
         }
     
