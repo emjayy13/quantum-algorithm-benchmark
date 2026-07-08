@@ -3,6 +3,7 @@ from typing import Any
 from qiskit_aer import AerSimulator
 from benchmark.algorithms import QuantumAlgorithm
 from benchmark.metrics import MetricsCollector
+from benchmark.exporter import CSVExporter
 
 DEFAULT_SHOTS= 1024
 
@@ -12,6 +13,7 @@ class BenchmarkRunner:
     def __init__(self, shots:int=DEFAULT_SHOTS):
         self.backend= AerSimulator()
         self.shots= shots
+        self.exporter = CSVExporter()
     
     def run(self, algorithm: QuantumAlgorithm) -> dict[str,Any]:
         """Execute a quantum algorithm and return benchmark results"""
@@ -30,9 +32,13 @@ class BenchmarkRunner:
                     counts=counts,
         )
 
-        return {
-            "algorithm": algorithm.name,
-            **metrics,
-            "shots": self.shots,
-        }
+        result = {
+                "algorithm": algorithm.name,
+                **metrics,
+                "shots": self.shots,
+            }
+
+        self.exporter.export(result)
+
+        return result
     
