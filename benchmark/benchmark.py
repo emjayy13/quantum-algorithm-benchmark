@@ -4,6 +4,7 @@ from qiskit_aer import AerSimulator
 from benchmark.algorithms import QuantumAlgorithm
 from benchmark.metrics import MetricsCollector
 from benchmark.exporter import CSVExporter
+from qiskit import transpile
 
 DEFAULT_SHOTS= 1024
 
@@ -19,15 +20,17 @@ class BenchmarkRunner:
         """Execute a quantum algorithm and return benchmark results"""
 
         circuit= algorithm.build_circuit()
+        transpiled_circuit= transpile(circuit, backend= self.backend, optimization_level=3,)
         start_time= time.perf_counter()
-        job= self.backend.run(circuit,shots=self.shots)
+        job= self.backend.run(transpiled_circuit,shots=self.shots,)
         result= job.result()
 
         runtime=time.perf_counter() - start_time
         counts= result.get_counts()
 
         metrics = MetricsCollector.collect(
-                    circuit=circuit,
+                    original_circuit=circuit,
+                    transpiled_circuit=transpiled_circuit,
                     runtime=runtime,
                     counts=counts,
         )
