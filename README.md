@@ -29,3 +29,53 @@ Quantum algorithms are often compared based on theoretical complexity, but pract
 * CSV export of benchmark results
 * Automatic generation of comparison plots
 * Clean, extensible project structure for adding new algorithms
+
+
+## Architecture
+
+The framework follows a modular architecture where each component has a single responsibility.
+
+```text
+                    +----------------------+
+                    |  Quantum Algorithm   |
+                    |   (Abstract Base)    |
+                    +----------+-----------+
+                               |
+        +----------------------+----------------------+
+        |                      |                      |
+   Deutsch               Bernstein-Vazirani       Grover
+                                                  |
+                                                  |
+                                                 QFT
+
+                               |
+                               ▼
+                     BenchmarkRunner
+                               |
+             +-----------------+------------------+
+             |                                    |
+             ▼                                    ▼
+      MetricsCollector                     AerSimulator
+             |                                    |
+             +-----------------+------------------+
+                               |
+                               ▼
+                         Benchmark Results
+                               |
+                  +------------+-------------+
+                  |                          |
+                  ▼                          ▼
+             CSV Exporter              Visualizer
+```
+
+### Component Responsibilities
+
+| Component             | Responsibility                                                                             |
+| --------------------- | ------------------------------------------------------------------------------------------ |
+| `QuantumAlgorithm`    | Defines the common interface for all quantum algorithms.                                   |
+| `BenchmarkRunner`     | Executes algorithms and collects benchmark data.                                           |
+| `MetricsCollector`    | Computes circuit metrics such as depth, gate count, runtime, and transpilation statistics. |
+| `CSVExporter`         | Stores benchmark results in CSV format.                                                    |
+| `BenchmarkVisualizer` | Generates comparison plots from benchmark data.                                            |
+
+This design makes the framework easy to extend. New quantum algorithms can be added by implementing the `QuantumAlgorithm` interface without modifying the benchmarking pipeline.
